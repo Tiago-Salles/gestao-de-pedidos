@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "476787519413",
+    "project_id": "gestao-de-pedidos-121f3",
+    "storage_bucket": "gestao-de-pedidos-121f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:476787519413:android:ff5833afc01ad4369373fc",
+        "android_client_info": {
+          "package_name": "com.example.gestao_de_pedidos"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "476787519413-t514ttkau4p4kdl6qm2r0atdnt8ph3ts.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVJ5Sdd7YsDa3J7E9IxtS5JoGZRPAmcCU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "476787519413-t514ttkau4p4kdl6qm2r0atdnt8ph3ts.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
