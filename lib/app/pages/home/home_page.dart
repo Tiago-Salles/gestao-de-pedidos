@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gestao_de_pedidos/app/models/cliente_model.dart';
 import 'package:gestao_de_pedidos/app/pages/home/client_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -9,8 +10,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ClientBloc clientBloc = ClientBloc();
-    final behaviorRequests = BehaviorSubject<List<int>>();
-    List<int> requestsList = [];
+    final behaviorSubmitRequests = BehaviorSubject<bool>();
+    bool submitRequest = false;
     String clientName = "";
     String request = "";
     String date = "";
@@ -20,13 +21,7 @@ class HomePage extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            children: [
-              StreamBuilder<List<int>>(
-                  initialData: const [],
-                  stream: behaviorRequests.stream,
-                  builder: (context, snapshot) {
-                    return snapshot.data!.isEmpty
-                        ? Container(
+            children: [Container(
                             margin: const EdgeInsets.only(top: 30),
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
@@ -39,8 +34,8 @@ class HomePage extends StatelessWidget {
                               cursorColor: Colors.white,
                               decoration: InputDecoration(
                                 suffixIcon: IconButton(
-                                  onPressed: () async {
-                                    await clientBloc.getDataFromDB(clientName);
+                                  onPressed: () {
+                                    clientBloc.getDataFromDB(clientName);
                                   },
                                   icon: const Icon(Icons.search),
                                 ),
@@ -62,14 +57,18 @@ class HomePage extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          )
-                        : Container();
-                  }),
-              StreamBuilder<List<int>>(
-                initialData: const [],
-                stream: behaviorRequests.stream,
+                          ),
+              // StreamBuilder<List<ClientModel>>(
+              //     initialData: const [],
+              //     stream: clientBloc.behaviorGetRequests.stream,
+              //     builder: (context, snapshot) {
+
+              //     }),
+              StreamBuilder<bool>(
+                initialData: false,
+                stream: behaviorSubmitRequests.stream,
                 builder: (context, snapshot) {
-                  if (snapshot.data != null && snapshot.data!.isNotEmpty) {
+                  if (snapshot.data != null && snapshot.data == true) {
                     return Container(
                       margin: const EdgeInsets.all(10),
                       height: MediaQuery.of(context).size.height * 0.75,
@@ -169,8 +168,7 @@ class HomePage extends StatelessWidget {
                             children: [
                               IconButton(
                                 onPressed: () {
-                                  requestsList.clear();
-                                  behaviorRequests.sink.add(requestsList);
+                                  behaviorSubmitRequests.sink.add(submitRequest);
                                 },
                                 icon: const Icon(
                                   Icons.arrow_back,
@@ -228,9 +226,7 @@ class HomePage extends StatelessWidget {
                                                 ),
                                               ),
                                             );
-                                            requestsList.clear();
-                                            behaviorRequests.sink
-                                                .add(requestsList);
+                                             behaviorSubmitRequests.sink.add(!submitRequest);
                                             Navigator.pop(context);
                                           },
                                           child: const Text(
@@ -278,16 +274,15 @@ class HomePage extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: StreamBuilder<List<int>>(
-        initialData: const [],
-        stream: behaviorRequests.stream,
+      floatingActionButton: StreamBuilder<bool>(
+        initialData: false,
+        stream: behaviorSubmitRequests.stream,
         builder: (context, snapshot) {
-          return snapshot.data!.isEmpty
+          return snapshot.data == false
               ? FloatingActionButton(
                   backgroundColor: Colors.orange,
                   onPressed: () {
-                    requestsList.add((requestsList.length) + 1);
-                    behaviorRequests.sink.add(requestsList);
+                     behaviorSubmitRequests.sink.add(!submitRequest);
                   },
                   child: const Icon(Icons.add),
                 )
